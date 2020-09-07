@@ -188,19 +188,23 @@ def multihost(portlist):
 
 try:
 	print('[+] Usage:\n' + 'Single host: python3 ' + sys.argv[0] + ' 192.168.1.10\n' + 'Multi host: python3 ' + sys.argv[0] + ' list.txt')
-	if '.txt' in sys.argv[1]:
-		starttime()
-		d = open(sys.argv[1], 'r').readlines()
-		print('All exploited host will be logged into the text file named \'result.txt\'')
-		print('\nExploiting.....\n')
-		for i in tqdm(d):
-			ii = i.strip()
-			t = threading.Thread(target=multihost,args=(portlist,))
-			t.start()
+	if len(sys.argv) > 1:
+		if '.txt' in sys.argv[1]:
+			starttime()
+			d = open(sys.argv[1], 'r').readlines()
+			print('All exploited host will be logged into the text file named \'result.txt\'')
+			print('\nExploiting.....\n')
+			for i in tqdm(d):
+				ii = i.strip()
+				t = threading.Thread(target=multihost,args=(portlist,))
+				t.start()
+		else: 
+			host = str(ipaddress.ip_address(sys.argv[1]))
+			print('\nExploiting.....\n')
+			singlehost()
 	else:
-		host = str(ipaddress.ip_address(sys.argv[1]))
-		print('\nExploiting.....\n')
-		singlehost()
+		print(Colors.RED + ' \n[ERROR] Please check your command again.' + Colors.DEFAULT)
+		sys.exit()
 except ValueError:
 	print(Colors.RED + ' [ERROR] Not a valid IP address or Hosts list.' + Colors.DEFAULT)
 	sys.exit()
